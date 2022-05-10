@@ -35,8 +35,8 @@ import java.util.Map.Entry;
 
 public class IfStatement extends Statement {
 
-  public static int IFTYPE_IF = 0;
-  public static int IFTYPE_IFELSE = 1;
+  public static final int IFTYPE_IF = 0;
+  public static final int IFTYPE_IFELSE = 1;
 
   public int iftype;
 

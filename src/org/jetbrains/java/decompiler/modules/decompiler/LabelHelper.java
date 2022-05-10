@@ -93,7 +93,7 @@ public class LabelHelper {
     }
 
     if (!stat.hasBasicSuccEdge()) {
-      for (StatEdge edge : stat.getSuccessorEdges(StatEdge.TYPE_CONTINUE | StatEdge.TYPE_BREAK)) {
+      for (StatEdge edge : stat.getSuccessorEdges(StatEdge.TYPE_CONTINUE/* | StatEdge.TYPE_BREAK*/)) {
         stat.removeSuccessor(edge);
       }
     }

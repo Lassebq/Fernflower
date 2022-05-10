@@ -77,7 +77,7 @@ public class InitializerProcessor {
               if (fexpr.getClassname().equals(wrapper.getClassStruct().qualifiedName)) {
                 StructField structField = wrapper.getClassStruct().getField(fexpr.getName(), fexpr.getDescriptor().descriptorString);
                 if (structField != null && structField.hasModifier(CodeConstants.ACC_FINAL)) {
-                  action = 1;
+                  action = 0;
                 }
               }
             }
@@ -86,10 +86,10 @@ public class InitializerProcessor {
                    isInvocationInitConstructor((InvocationExprent)exprent, meth, wrapper, true)) {
             // this() or super()
             lstExprents.add(0, lstExprents.remove(index));
-            action = 2;
+            action = 1;
           }
 
-          if (action != 1) {
+          if (action != 0) {
             break;
           }
 
@@ -269,8 +269,6 @@ public class InitializerProcessor {
             }
           }
           break;
-        case Exprent.EXPRENT_FIELD:
-          return false;
       }
     }
 

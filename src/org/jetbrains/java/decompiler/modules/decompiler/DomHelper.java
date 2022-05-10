@@ -15,6 +15,16 @@
  */
 package org.jetbrains.java.decompiler.modules.decompiler;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+
 import org.jetbrains.java.decompiler.code.cfg.BasicBlock;
 import org.jetbrains.java.decompiler.code.cfg.ControlFlowGraph;
 import org.jetbrains.java.decompiler.code.cfg.ExceptionRangeCFG;
@@ -22,13 +32,23 @@ import org.jetbrains.java.decompiler.main.DecompilerContext;
 import org.jetbrains.java.decompiler.main.extern.IFernflowerLogger;
 import org.jetbrains.java.decompiler.modules.decompiler.decompose.FastExtendedPostdominanceHelper;
 import org.jetbrains.java.decompiler.modules.decompiler.deobfuscator.IrreducibleCFGDeobfuscator;
-import org.jetbrains.java.decompiler.modules.decompiler.stats.*;
+import org.jetbrains.java.decompiler.modules.decompiler.stats.BasicBlockStatement;
+import org.jetbrains.java.decompiler.modules.decompiler.stats.CatchAllStatement;
+import org.jetbrains.java.decompiler.modules.decompiler.stats.CatchStatement;
+import org.jetbrains.java.decompiler.modules.decompiler.stats.DoStatement;
+import org.jetbrains.java.decompiler.modules.decompiler.stats.GeneralStatement;
+import org.jetbrains.java.decompiler.modules.decompiler.stats.IfStatement;
+import org.jetbrains.java.decompiler.modules.decompiler.stats.RootStatement;
+import org.jetbrains.java.decompiler.modules.decompiler.stats.SequenceStatement;
+import org.jetbrains.java.decompiler.modules.decompiler.stats.Statement;
+import org.jetbrains.java.decompiler.modules.decompiler.stats.SwitchStatement;
+import org.jetbrains.java.decompiler.modules.decompiler.stats.SynchronizedStatement;
 import org.jetbrains.java.decompiler.util.FastFixedSetFactory;
 import org.jetbrains.java.decompiler.util.FastFixedSetFactory.FastFixedSet;
 import org.jetbrains.java.decompiler.util.InterpreterUtil;
 import org.jetbrains.java.decompiler.util.VBStyleCollection;
 
-import java.util.*;
+import test.util.DotExporter;
 
 public class DomHelper {
 
@@ -340,9 +360,9 @@ public class DomHelper {
 
         if (reducibility > 0) {
 
-          //					try {
-          //						DotExporter.toDotFile(general, new File("c:\\Temp\\stat1.dot"));
-          //					} catch(Exception ex) {ex.printStackTrace();}
+//          					try {
+//          						DotExporter.toDotFile(general, new File("D:\\Stuff\\Decompiled\\stat1.dot"));
+//          					} catch(Exception ex) {ex.printStackTrace();}
 
           // take care of irreducible control flow graphs
           if (IrreducibleCFGDeobfuscator.isStatementIrreducible(general)) {

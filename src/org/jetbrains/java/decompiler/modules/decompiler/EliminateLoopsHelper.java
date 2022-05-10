@@ -15,34 +15,35 @@
  */
 package org.jetbrains.java.decompiler.modules.decompiler;
 
-import org.jetbrains.java.decompiler.modules.decompiler.stats.DoStatement;
-import org.jetbrains.java.decompiler.modules.decompiler.stats.Statement;
-
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+
+import org.jetbrains.java.decompiler.modules.decompiler.stats.DoStatement;
+import org.jetbrains.java.decompiler.modules.decompiler.stats.Statement;
 
 
 public class EliminateLoopsHelper {
 
 
-  //	public static boolean eliminateLoops(Statement root) {
-  //
-  //		boolean ret = eliminateLoopsRec(root);
-  //
-  //		if(ret) {
-  //			SequenceHelper.condenseSequences(root);
-  //
-  //			HashSet<Integer> setReorderedIfs = new HashSet<Integer>();
-  //
-  //			SimplifyExprentsHelper sehelper = new SimplifyExprentsHelper(false);
-  //			while(sehelper.simplifyStackVarsStatement(root, setReorderedIfs, null)) {
-  //				SequenceHelper.condenseSequences(root);
-  //			}
-  //		}
-  //
-  //		return ret;
-  //	}
+  	public static boolean eliminateLoops(Statement root) {
+  
+  		boolean ret = eliminateLoopsRec(root);
+  
+  		if(ret) {
+  			SequenceHelper.condenseSequences(root);
+  
+  			HashSet<Integer> setReorderedIfs = new HashSet<Integer>();
+  
+  			SimplifyExprentsHelper sehelper = new SimplifyExprentsHelper(false);
+  			while(sehelper.simplifyStackVarsStatement(root, setReorderedIfs, null, null)) {
+  				SequenceHelper.condenseSequences(root);
+  			}
+  		}
+  
+  		return ret;
+  	}
 
   private static boolean eliminateLoopsRec(Statement stat) {
 

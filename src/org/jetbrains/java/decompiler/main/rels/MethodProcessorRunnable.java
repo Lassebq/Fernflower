@@ -31,6 +31,7 @@ import org.jetbrains.java.decompiler.struct.StructClass;
 import org.jetbrains.java.decompiler.struct.StructMethod;
 
 import java.io.IOException;
+import java.util.HashSet;
 
 public class MethodProcessorRunnable implements Runnable {
 
@@ -128,7 +129,7 @@ public class MethodProcessorRunnable implements Runnable {
     // not until now because of comparison between synchronized statements in the finally cycle
     DomHelper.removeSynchronizedHandler(root);
 
-    //		LabelHelper.lowContinueLabels(root, new HashSet<StatEdge>());
+//    LabelHelper.lowContinueLabels(root, new HashSet<StatEdge>());
 
     SequenceHelper.condenseSequences(root);
 
@@ -183,14 +184,13 @@ public class MethodProcessorRunnable implements Runnable {
       }
 
       // initializer may have at most one return point, so no transformation of method exits permitted
-      if (isInitializer || !ExitHelper.condenseExits(root)) {
-        break;
+      if (!(isInitializer || !ExitHelper.condenseExits(root))) {
+        continue;
       }
 
-      // FIXME: !!
-      //			if(!EliminateLoopsHelper.eliminateLoops(root)) {
-      //				break;
-      //			}
+      if(!EliminateLoopsHelper.eliminateLoops(root)) {
+    	break;
+      }
     }
 
     ExitHelper.removeRedundantReturns(root);

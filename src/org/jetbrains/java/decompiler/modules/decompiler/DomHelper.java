@@ -234,11 +234,11 @@ public class DomHelper {
 
     if (!processStatement(root, new HashMap<Integer, Set<Integer>>())) {
 
-      //			try {
-      //				DotExporter.toDotFile(root.getFirst().getStats().get(13), new File("c:\\Temp\\stat1.dot"));
-      //			} catch (Exception ex) {
-      //				ex.printStackTrace();
-      //			}
+//      			try {
+//      				DotExporter.toDotFile(graph, new File("D:\\Stuff\\Decompiled\\stat1.dot"), true);
+//      			} catch (Exception ex) {
+//      				ex.printStackTrace();
+//      			}
       throw new RuntimeException("parsing failure!");
     }
 
@@ -360,9 +360,6 @@ public class DomHelper {
 
         if (reducibility > 0) {
 
-//          					try {
-//          						DotExporter.toDotFile(general, new File("D:\\Stuff\\Decompiled\\stat1.dot"));
-//          					} catch(Exception ex) {ex.printStackTrace();}
 
           // take care of irreducible control flow graphs
           if (IrreducibleCFGDeobfuscator.isStatementIrreducible(general)) {
@@ -373,14 +370,14 @@ public class DomHelper {
           }
           else {
             if (mapstage == 2 || mapRefreshed) { // last chance lost
+				try {
+					DotExporter.toDotFile(general, new File("D:\\Stuff\\Decompiled\\stat1.dot"));
+				} catch(Exception ex) {ex.printStackTrace();}
               DecompilerContext.getLogger().writeMessage("Statement cannot be decomposed although reducible!", IFernflowerLogger.Severity.ERROR);
             }
             break;
           }
 
-          //					try {
-          //						DotExporter.toDotFile(general, new File("c:\\Temp\\stat1.dot"));
-          //					} catch(Exception ex) {ex.printStackTrace();}
 
           mapExtPost = new HashMap<Integer, Set<Integer>>();
           mapRefreshed = true;

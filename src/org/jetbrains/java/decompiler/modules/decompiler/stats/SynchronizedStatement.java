@@ -81,7 +81,7 @@ public class SynchronizedStatement extends Statement {
     buf.appendIndent(indent).append(headexprent.get(0).toJava(indent, tracer)).append(" {").appendLineSeparator();
     tracer.incrementCurrentSourceLine();
 
-    buf.append(ExprProcessor.jmpWrapper(body, indent + 1, true, tracer));
+    buf.append(ExprProcessor.jmpWrapper(body, indent + 1, false, tracer));
 
     buf.appendIndent(indent).append("}").appendLineSeparator();
     tracer.incrementCurrentSourceLine();

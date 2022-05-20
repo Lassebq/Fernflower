@@ -163,7 +163,7 @@ public class CatchStatement extends Statement {
     buf.appendIndent(indent).append("try {").appendLineSeparator();
     tracer.incrementCurrentSourceLine();
 
-    buf.append(ExprProcessor.jmpWrapper(first, indent + 1, true, tracer));
+    buf.append(ExprProcessor.jmpWrapper(first, indent + 1, false, tracer));
     buf.appendIndent(indent).append("}");
 
     for (int i = 1; i < stats.size(); i++) {
@@ -181,7 +181,7 @@ public class CatchStatement extends Statement {
       buf.append(vars.get(i - 1).toJava(indent, tracer));
       buf.append(") {").appendLineSeparator();
       tracer.incrementCurrentSourceLine();
-      buf.append(ExprProcessor.jmpWrapper(stats.get(i), indent + 1, true, tracer)).appendIndent(indent)
+      buf.append(ExprProcessor.jmpWrapper(stats.get(i), indent + 1, false, tracer)).appendIndent(indent)
         .append("}");
     }
     buf.appendLineSeparator();

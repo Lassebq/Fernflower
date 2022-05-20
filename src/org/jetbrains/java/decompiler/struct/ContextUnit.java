@@ -97,6 +97,7 @@ public class ContextUnit {
   }
 
   public void save() {
+	DecompilerContext.getLogger().startSave(classes.size());
     switch (type) {
       case TYPE_FOLDER:
         // create folder
@@ -109,6 +110,7 @@ public class ContextUnit {
 
         // classes
         for (int i = 0; i < classes.size(); i++) {
+          DecompilerContext.getLogger().updateSave(i);
           StructClass cl = classes.get(i);
           String entryName = decompiledData.getClassEntryName(cl, classEntries.get(i));
           if (entryName != null) {
@@ -145,6 +147,7 @@ public class ContextUnit {
 
         // classes
         for (int i = 0; i < classes.size(); i++) {
+          DecompilerContext.getLogger().updateSave(i);
           StructClass cl = classes.get(i);
           String entryName = decompiledData.getClassEntryName(cl, classEntries.get(i));
           if (entryName != null) {

@@ -127,7 +127,7 @@ public class CatchAllStatement extends Statement {
     List<StatEdge> lstSuccs = first.getSuccessorEdges(STATEDGE_DIRECT_ALL);
     if (first.type == TYPE_TRYCATCH && first.varDefinitions.isEmpty() && isFinally &&
         !labeled && !first.isLabeled() && (lstSuccs.isEmpty() || !lstSuccs.get(0).explicit)) {
-      TextBuffer content = ExprProcessor.jmpWrapper(first, indent, true, tracer);
+      TextBuffer content = ExprProcessor.jmpWrapper(first, indent, false, tracer);
       content.setLength(content.length() - new_line_separator.length());
       tracer.incrementCurrentSourceLine(-1);
       buf.append(content);
@@ -135,7 +135,7 @@ public class CatchAllStatement extends Statement {
     else {
       buf.appendIndent(indent).append("try {").appendLineSeparator();
       tracer.incrementCurrentSourceLine();
-      buf.append(ExprProcessor.jmpWrapper(first, indent + 1, true, tracer));
+      buf.append(ExprProcessor.jmpWrapper(first, indent + 1, false, tracer));
       buf.appendIndent(indent).append("}");
     }
 
@@ -148,7 +148,7 @@ public class CatchAllStatement extends Statement {
       tracer.incrementCurrentSourceLine();
     }
 
-    buf.append(ExprProcessor.jmpWrapper(handler, indent + 1 + (monitor != null ? 1 : 0), true, tracer));
+    buf.append(ExprProcessor.jmpWrapper(handler, indent + 1 + (monitor != null ? 1 : 0), false, tracer));
 
     if (monitor != null) {
       buf.appendIndent(indent + 1).append("}").appendLineSeparator();

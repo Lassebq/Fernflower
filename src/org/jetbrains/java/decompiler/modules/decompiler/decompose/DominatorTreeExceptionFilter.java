@@ -163,8 +163,7 @@ public class DominatorTreeExceptionFilter {
               exit = childid;
             }
             else {
-              // exit = map.containsKey(handler)?-1:mapChild.get(handler); FIXME: Eclipse bug?
-              exit = map.containsKey(handler) ? new Integer(-1) : mapChild.get(handler);
+               exit = map.containsKey(handler)?new Integer(-1):mapChild.get(handler);
             }
 
             if (exit != null) {

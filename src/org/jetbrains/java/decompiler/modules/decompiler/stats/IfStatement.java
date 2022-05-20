@@ -236,12 +236,12 @@ public class IfStatement extends Statement {
         if (ifedge.labeled) {
           buf.append(" label").append(ifedge.closure.id.toString());
         }
+        buf.append(";").appendLineSeparator();
+        tracer.incrementCurrentSourceLine();
       }
-      buf.append(";").appendLineSeparator();
-      tracer.incrementCurrentSourceLine();
     }
     else {
-      buf.append(ExprProcessor.jmpWrapper(ifstat, indent + 1, true, tracer));
+      buf.append(ExprProcessor.jmpWrapper(ifstat, indent + 1, false, tracer));
     }
 
     boolean elseif = false;

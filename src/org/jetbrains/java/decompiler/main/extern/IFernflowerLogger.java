@@ -56,4 +56,8 @@ public abstract class IFernflowerLogger {
   public void startWriteClass(String className) { }
 
   public void endWriteClass() { }
+
+  public void startSave(int total) { }
+
+  public void updateSave(int current) { }
 }

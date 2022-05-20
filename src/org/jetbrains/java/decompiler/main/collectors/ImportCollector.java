@@ -147,6 +147,7 @@ public class ImportCollector {
       // exclude a current class or one of the nested ones, java.lang and empty packages
       if (!setNotImportedNames.contains(ent.getKey()) &&
           !JAVA_LANG_PACKAGE.equals(ent.getValue()) &&
+          !currentPackagePoint.equals(ent.getValue()) &&
           !ent.getValue().isEmpty()) {
         res.add(ent.getValue() + "." + ent.getKey());
       }

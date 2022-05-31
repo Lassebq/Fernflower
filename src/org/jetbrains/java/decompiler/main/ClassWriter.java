@@ -988,6 +988,7 @@ public class ClassWriter {
   }
 
   private static void appendComment(TextBuffer buffer, String comment, int indent) {
+	if(DecompilerContext.getOption(IFernflowerPreferences.NO_COMMENT_OUTPUT)) return;
     buffer.appendIndent(indent).append("// $FF: ").append(comment).appendLineSeparator();
   }
 

@@ -370,9 +370,9 @@ public class DomHelper {
           }
           else {
             if (mapstage == 2 || mapRefreshed) { // last chance lost
-				try {
-					DotExporter.toDotFile(general, new File("D:\\Stuff\\Decompiled\\stat1.dot"));
-				} catch(Exception ex) {ex.printStackTrace();}
+//				try {
+//					DotExporter.toDotFile(general, new File("D:\\Stuff\\Decompiled\\stat1.dot"));
+//				} catch(Exception ex) {ex.printStackTrace();}
               DecompilerContext.getLogger().writeMessage("Statement cannot be decomposed although reducible!", IFernflowerLogger.Severity.ERROR);
             }
             break;

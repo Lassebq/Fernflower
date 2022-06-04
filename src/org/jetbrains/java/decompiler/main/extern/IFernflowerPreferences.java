@@ -46,6 +46,7 @@ public interface IFernflowerPreferences {
   String BYTECODE_SOURCE_MAPPING = "bsm";
   String USE_DEBUG_LINE_NUMBERS = "udl";
   String NO_COMMENT_OUTPUT = "nco";
+  String OVERRIDE_ANNOTATION = "ovr";
 
   String LOG_LEVEL = "log";
   String MAX_PROCESSING_METHOD = "mpm";
@@ -86,6 +87,7 @@ public interface IFernflowerPreferences {
     put(BYTECODE_SOURCE_MAPPING, "0");
     put(USE_DEBUG_LINE_NUMBERS, "0");
     put(NO_COMMENT_OUTPUT, "0");
+    put(OVERRIDE_ANNOTATION, "0");
 
     put(LOG_LEVEL, IFernflowerLogger.Severity.INFO.name());
     put(MAX_PROCESSING_METHOD, "0");

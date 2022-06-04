@@ -488,9 +488,9 @@ public class FunctionExprent extends Exprent {
         return res.append(".length");
       case FUNCTION_IIF:
         return wrapOperandString(lstOperands.get(0), true, indent, tracer)
-          .append("?")
+          .append(" ? ")
           .append(wrapOperandString(lstOperands.get(1), true, indent, tracer))
-          .append(":")
+          .append(" : ")
           .append(wrapOperandString(lstOperands.get(2), true, indent, tracer));
       case FUNCTION_IPP:
         return wrapOperandString(lstOperands.get(0), true, indent, tracer).append("++");

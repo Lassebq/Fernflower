@@ -221,9 +221,8 @@ public class IfStatement extends Statement {
     tracer.incrementCurrentSourceLine();
 
     if (ifstat == null) {
-      buf.appendIndent(indent + 1);
-
       if (ifedge.explicit) {
+      buf.appendIndent(indent + 1);
         if (ifedge.getType() == StatEdge.TYPE_BREAK) {
           // break
           buf.append("break");

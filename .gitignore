@@ -1,5 +1,7 @@
-bin/*
-.classpath
+.idea
+.metadata
 .project
-java-decompiler-engine.iml
-/bin/
+.classpath
+.gradle
+build
+bin

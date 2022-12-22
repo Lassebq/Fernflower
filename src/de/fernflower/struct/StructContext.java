@@ -180,11 +180,17 @@ public class StructContext {
           name = path.toString().substring(1);
         }
         if (name.endsWith(".class")) {
-          byte[] bytes = Files.readAllBytes(path);
-          StructClass cl = new StructClass(bytes, isOwn, loader);
-          classes.put(cl.qualifiedName, cl);
-          unit.addClass(cl, name);
-          loader.addClassLink(cl.qualifiedName, new LazyLoader.Link(LazyLoader.Link.ENTRY, file.getAbsolutePath(), name));
+        	try {
+	          byte[] bytes = Files.readAllBytes(path);
+	          StructClass cl = new StructClass(bytes, isOwn, loader);
+	          classes.put(cl.qualifiedName, cl);
+	          unit.addClass(cl, name);
+	          loader.addClassLink(cl.qualifiedName, new LazyLoader.Link(LazyLoader.Link.ENTRY, file.getAbsolutePath(), name));
+	        }
+	        catch (Exception ex) {
+	          String message = "Corrupted class file: " + file;
+	          DecompilerContext.getLogger().writeMessage(message, ex);
+	        }
         } else {
           if ("META-INF/MANIFEST.MF".equals(name)) {
             unit.setManifest(new Manifest(Files.newInputStream(path)));

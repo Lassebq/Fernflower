@@ -15,25 +15,20 @@
  */
 package de.fernflower.struct;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystemAlreadyExistsException;
-import java.nio.file.FileSystems;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.util.Collections;
+import java.io.InputStream;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.jar.Manifest;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import de.fernflower.main.DecompilerContext;
-import de.fernflower.main.extern.IFernflowerLogger.Severity;
 import de.fernflower.main.extern.IResultSaver;
 import de.fernflower.struct.lazy.LazyLoader;
 import de.fernflower.util.DataInputFullStream;
@@ -150,63 +145,56 @@ public class StructContext {
     }
   }
 
-
   private void addArchive(String externalPath, File file, int type, boolean isOwn) throws IOException {
-    DecompilerContext.getLogger().writeMessage("Adding Archive: " + file.getAbsolutePath(), Severity.INFO);
-    FileSystem fs;
-    try {
-      URI uri = new URI("jar:file", null, file.toURI().getPath(), null);
-      try {
-        fs = FileSystems.newFileSystem(uri, Collections.emptyMap());
-      } catch (FileSystemAlreadyExistsException e) {
-        fs = FileSystems.getFileSystem(uri);
-      }
-    } catch (URISyntaxException e) {
-      throw new RuntimeException(e);
+    ContextUnit unit = units.computeIfAbsent(externalPath + "/" + file, k -> new ContextUnit(type, externalPath, file.getName(), isOwn, saver, decompiledData));
+    try (ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(file))) {
+		ZipEntry zipEntry;
+		Set<String> dirs = new HashSet<>();
+		while ((zipEntry = zipInputStream.getNextEntry()) != null) {
+			String name = zipEntry.getName().replace("\\", "/");
+			if(zipEntry.isDirectory()) {
+				dirs.add(name);
+			}
+			else if (name.endsWith(".class")) {
+				int slash = name.lastIndexOf("/");
+				if(slash != -1) {
+					dirs.add(name.substring(0, slash));
+				}
+	        	try {
+		          byte[] bytes = readStream(zipInputStream);
+		          StructClass cl = new StructClass(bytes, isOwn, loader);
+		          classes.put(cl.qualifiedName, cl);
+		          unit.addClass(cl, name);
+		          loader.addClassLink(cl.qualifiedName, new LazyLoader.Link(LazyLoader.Link.ENTRY, file.getAbsolutePath(), name));
+		        }
+		        catch (Exception ex) {
+		          String message = "Corrupted class file: " + file;
+		          DecompilerContext.getLogger().writeMessage(message, ex);
+		        }
+	        } else {
+	          if ("META-INF/MANIFEST.MF".equals(name)) {
+	            unit.setManifest(new Manifest(zipInputStream));
+	          }
+	          unit.addOtherEntry(file.getAbsolutePath(), name);
+	        }
+		} 
+		for(String dir : dirs) {
+			unit.addDirEntry(dir);
+		}
     }
-    addFileSystem(fs, externalPath, file, type, isOwn);
-    fs.close();
   }
 
-  private void addFileSystem(FileSystem fs, String externalPath, File file, int type, boolean isOwn) throws IOException {
-    ContextUnit unit = units.computeIfAbsent(externalPath + "/" + file, k -> new ContextUnit(type, externalPath, file.getName(), isOwn, saver, decompiledData));
-    Files.walkFileTree(fs.getPath("/"), new SimpleFileVisitor<Path>() {
-      @Override
-      public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) throws IOException {
-        String name;
-        if (path.getNameCount() > 2 && "modules".equals(path.getName(0).toString()) && "jrt".equals(path.getFileSystem().provider().getScheme())) {
-          name = path.subpath(2, path.getNameCount()).toString();
-        } else {
-          name = path.toString().substring(1);
-        }
-        if (name.endsWith(".class")) {
-        	try {
-	          byte[] bytes = Files.readAllBytes(path);
-	          StructClass cl = new StructClass(bytes, isOwn, loader);
-	          classes.put(cl.qualifiedName, cl);
-	          unit.addClass(cl, name);
-	          loader.addClassLink(cl.qualifiedName, new LazyLoader.Link(LazyLoader.Link.ENTRY, file.getAbsolutePath(), name));
-	        }
-	        catch (Exception ex) {
-	          String message = "Corrupted class file: " + file;
-	          DecompilerContext.getLogger().writeMessage(message, ex);
-	        }
-        } else {
-          if ("META-INF/MANIFEST.MF".equals(name)) {
-            unit.setManifest(new Manifest(Files.newInputStream(path)));
-          }
-          unit.addOtherEntry(file.getAbsolutePath(), name);
-        }
-        return FileVisitResult.CONTINUE;
-      }
+  private static byte[] readStream(InputStream stream) throws IOException {
+  	ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 
-      @Override
-      public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
-        String dirStr = dir.toString();
-        if (dirStr.length() > 1) unit.addDirEntry(dirStr.substring(1));
-        return FileVisitResult.CONTINUE;
-      }
-    });
+  	int nRead;
+  	byte[] data = new byte[16384];
+
+  	while ((nRead = stream.read(data, 0, data.length)) != -1) {
+  		buffer.write(data, 0, nRead);
+  	}
+
+  	return buffer.toByteArray();
   }
 
   public Map<String, StructClass> getClasses() {

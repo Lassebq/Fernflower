@@ -3,5 +3,6 @@
 .project
 .classpath
 .gradle
+.settings
 build
 bin

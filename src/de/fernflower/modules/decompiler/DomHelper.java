@@ -231,11 +231,11 @@ public class DomHelper {
 
     if (!processStatement(root, new HashMap<Integer, Set<Integer>>())) {
 
-//      			try {
-//      				DotExporter.toDotFile(graph, new File("D:\\Stuff\\Decompiled\\stat1.dot"), true);
-//      			} catch (Exception ex) {
-//      				ex.printStackTrace();
-//      			}
+//      try {
+//        DotExporter.toDotFile(graph, new File("D:\\Stuff\\Decompiled\\stat1.dot"), true);
+//      } catch (Exception ex) {
+//     	  ex.printStackTrace();
+//      }
       throw new RuntimeException("parsing failure!");
     }
 
